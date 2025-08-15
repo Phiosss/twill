@@ -151,6 +151,42 @@
                                       @btn:click="editor.chain().focus().mergeCells().run()"/>
               </div>
             </template>
+            <!-- Color Plugin -->
+            <template v-if="toolbar.color">
+                <input class="wysiwyg__color-picker" type="color" @input="editor.chain().focus().setColor($event.target.value).run()" :value="editor.getAttributes('textStyle').color">
+              <wysiwyg-menu-bar-btn v-for="color in toolbar.color" 
+                                    :key="color"
+                                    :color="color"
+                                    @btn:click="editor.chain().focus().setColor(color).run()" />
+            </template>
+
+            <wysiwyg-menu-bar-btn icon="video"
+                                  v-if="toolbar.video"
+                                  :isActive="videoActive"
+                                  @btn:click="toggleVideo()"/>
+                                  <template v-if="toolbar.video">
+                <div v-if="videoActive">
+                    <div class="addVideoGrp">
+                        <input
+                            id="width"
+                            type="number"
+                            v-model="videoWidth"
+                            placeholder="width"
+                            min="320"
+                        >
+                        <input
+                            id="height"
+                            type="number"
+                            v-model="videoHeight"
+                            placeholder="height"
+                            min="180"
+                        >
+                        <button id="add" @click="addVideo">
+                        Add YouTube video
+                        </button>
+                    </div>
+                </div>
+            </template>
 
             <template v-if="this.toolbar.wrappers">
               <br/>
@@ -264,6 +300,10 @@
   import {Link} from "@tiptap/extension-link";
   import {Placeholder} from "@tiptap/extension-placeholder";
   import {TextAlign} from '@tiptap/extension-text-align';
+  import Text from '@tiptap/extension-text'
+  import TextStyle from '@tiptap/extension-text-style'
+  import { Color } from '@tiptap/extension-color'
+  import Youtube from '@tiptap/extension-youtube'
 
   export default {
     name: 'A17Wysiwyg',
@@ -380,6 +420,9 @@
         editor: null,
         linkWindow: null,
         browserIsOpen: false,
+        videoWidth: '640',
+        videoHeight: '480',
+        videoActive: false,
       }
     },
     methods: {
@@ -632,6 +675,16 @@
         horizontalRule: this.toolbar.hr ?? false,
         heading: this.toolbar.header ? { levels: this.headingOptions } : false,
       }))
+      // Color and Video Plugin
+      extensions.push(Text)
+      extensions.push(TextStyle)
+      extensions.push(Color)
+      extensions.push(
+        Youtube.configure({
+          controls: false,
+          nocookie: true,
+        }),
+      )
 
       this.editor = new Editor({
         content,
@@ -918,4 +971,33 @@
       }
     }
   }
+</style>
+<!-- Video Plugin -->
+<style>
+    .addVideoGrp {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .25rem;
+    }
+    .addVideoGrp button,
+    .addVideoGrp input {
+        background: #f1f1f1;
+        border-radius: .5rem;
+        border: none;
+        color: #2E2B29;
+        font-family: inherit;
+        font-size: .875rem;
+        font-weight: 500;
+        line-height: 1.15;
+        margin: none;
+        padding: .375rem .625rem;
+        transition: all .2s cubic-bezier(.65,.05,.36,1);
+    }
+    .addVideoGrp button {
+        cursor: pointer;
+    }
+    .addVideoGrp button:hover {
+        background: rgba(61, 37, 20, .12);
+        color: #110F0E;
+    }
 </style>

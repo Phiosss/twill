@@ -17,6 +17,10 @@
     </svg>
     </span>
     </template>
+    <!-- For Color Plugin -->
+    <template v-else-if="color">
+        <div :style="`width: 20px;height: 20px;background-color: ${color};`"></div>
+    </template>
     <template v-else>
       {{ label }}
     </template>
@@ -46,7 +50,11 @@
       disabled: {
         type: Boolean,
         default: false
-      }
+      }, // For Color Plugin
+      color: {
+        type: String,
+        required: false,
+      },
     },
     methods: {
       handleClick () {

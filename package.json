@@ -23,9 +23,7 @@
     "@tiptap/extension-table-cell": "^2.2.1",
     "@tiptap/extension-table-header": "^2.2.1",
     "@tiptap/extension-table-row": "^2.2.1",
-    "@tiptap/extension-text-align": "^2.2.1",
     "@tiptap/extension-underline": "^2.2.1",
-    "@tiptap/pm": "^2.2.1",
     "@tiptap/starter-kit": "^2.2.1",
     "@tiptap/vue-2": "^2.2.1",
     "alpinejs": "^3.13.5",
@@ -53,6 +51,11 @@
     "@babel/eslint-parser": "^7.23.10",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.10",
+    "@tiptap/extension-color": "^2.26.1",
+    "@tiptap/extension-text-align": "^2.26.1",
+    "@tiptap/extension-text-style": "^2.26.1",
+    "@tiptap/extension-youtube": "^2.26.1",
+    "@tiptap/pm": "^2.26.1",
     "@vue/cli-plugin-babel": "~5.0.8",
     "@vue/cli-plugin-eslint": "^5.0.8",
     "@vue/cli-service": "~5.0.8",
@@ -73,5 +76,12 @@
     "vue-template-compiler": "^2.7.16",
     "webpack-assets-manifest": "^5.1.0",
     "webpack-bundle-analyzer": "^4.10.1"
-  }
+  },
+    "overrides": {
+      "@tiptap/pm": "^2.26.1",
+      "@tiptap/extension-text-style": "^2.26.1",
+      "@tiptap/extension-color": "^2.26.1",
+      "@tiptap/extension-text-align": "^2.26.1",
+      "@tiptap/extension-youtube": "^2.26.1"
+    }
 }

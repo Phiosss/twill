@@ -2,6 +2,7 @@
 
 namespace A17\Twill\Http\Controllers\Admin;
 
+use A17\Twill\Services\Listings\Filters\FreeTextSearch;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -46,6 +47,14 @@ abstract class NestedModuleController extends ModuleController
     {
         if ($this->showOnlyParentItemsInBrowsers) {
             return $this->getIndexItems($scopes, true);
+        }
+
+        // Modified: To Applying text search function on nested items
+        $appliedFilters = [];
+        if ($this->request->has('search')) {
+            $appliedFilters[] = FreeTextSearch::make()
+                ->searchFor($this->request->get('search'))
+                ->searchColumns($this->searchColumns);
         }
 
         return $this->repository->get(
