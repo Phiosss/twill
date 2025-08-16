@@ -313,4 +313,13 @@ return [
     'base_singleton_controller' => A17\Twill\Http\Controllers\Admin\SingletonModuleController::class,
 
     'base_request' => A17\Twill\Http\Requests\Admin\Request::class,
+
+    // Customize config for running clena revision job
+    'revisions' => [
+        // queue: default sync: distpachSync；inline: clean extra revisision directly
+        'cleanup_driver' => env('TWILL_REVISIONS_CLEANUP', 'queue'),
+        'queue' => env('TWILL_REVISIONS_QUEUE', 'default'),
+        // DB transaction retries for inline
+        'transaction_retries' => env('TWILL_REVISIONS_TX_RETRIES', 3),
+    ],
 ];

@@ -10,14 +10,10 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use A17\Twill\Jobs\CleanupRevisions;
+use Illuminate\Support\Facades\DB;
 
 trait HandleRevisions
 {
-    /**
-     * The Laravel queue name to be used for the revision limiting.
-     */
-    protected string $revisionLimitJobQueue = 'default';
-
     public function hydrateHandleRevisions(TwillModelContract $object, array $fields): TwillModelContract
     {
         foreach ($this->getRepeaters() as $repeater) {
@@ -54,8 +50,20 @@ trait HandleRevisions
         }
 
         if (isset($object->limitRevisions) || TwillConfig::getRevisionLimit()) {
-            CleanupRevisions::dispatch($object)
-                ->onQueue($this->revisionLimitJobQueue);
+            // Modified due to some revision doesn't clean at all
+            $driver = config('twill.revisions.cleanup_driver', 'queue'); // queue|sync|inline
+            $queue  = config('twill.revisions.queue', 'default');
+            $retries = config('twill.revisions.transaction_retries', 3);
+            if ($driver === 'inline') {
+                DB::transaction(function () use ($object, $limit) {
+                    $object->deleteSpecificRevisions($limit);
+                }, $retries);
+            }
+            if ($driver === 'sync') {
+                CleanupRevisions::dispatchSync($object)->onQueue($queue);
+            }
+            // default: queue
+            CleanupRevisions::dispatch($object)->onQueue($queue);
         }
 
         return $fields;
