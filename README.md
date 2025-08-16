@@ -1,3 +1,10 @@
+# update step
+git fetch upstream
+git checkout hkier-3.5
+git merge --no-ff upstream/3.x
+npm ci && npm run build  
+git tag 3.5.3-hkier.1 && git push origin --tags
+
 <p align="center">
     <a href="https://twillcms.com" target="_blank"><img src="docs/_templates/assets/twill_cms_logo_white.png" width="400"></a>
 </p>
